@@ -6,14 +6,14 @@ export type ReqData<T> = {
   loading: boolean;
 };
 
-const useRequest = <T>(val: Promise<T>): ReqData<T> => {
+const useRequest = <T>(val: () => Promise<T>): ReqData<T> => {
   const [result, setResult] = useState<T | undefined>(undefined);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const get = () => {
-      val
+      val()
         .then((result) => {
           setResult(result);
         })

@@ -7,4 +7,5 @@ export const Server = {
 export enum MyCollections {
   Sports = "636f120814bc273d82db",
   Users = "636f27df6af7980e574e",
+  Events = "636fcbf3c1fbf01f919b",
 }
