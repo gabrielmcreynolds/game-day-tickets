@@ -1,5 +1,6 @@
 import { useUser } from "../lib/context/user.context";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const NavBar = () => {
   const router = useRouter();
@@ -31,17 +32,18 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="h-full pt-20 -z-20 fixed left-0 w-64 bg-primary ">
+    <nav className="h-full pt-20 fixed left-0 w-64 bg-primary ">
       <ul>
         {keys.map((page) => (
-          <ul
-            className={`text-white text-2xl ml-4 my-7 ${
-              router.pathname.includes(page.route) ? "underline" : ""
-            }`}
-            key={page.route}
-          >
-            {page.name}
-          </ul>
+          <Link key={page.route} href={page.route}>
+            <li
+              className={`cursor-pointer text-white text-2xl ml-4 my-7 ${
+                router.pathname.includes(page.route) ? "underline" : ""
+              }`}
+            >
+              {page.name}
+            </li>
+          </Link>
         ))}
       </ul>
     </nav>
