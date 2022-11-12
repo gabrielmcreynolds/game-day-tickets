@@ -1,5 +1,4 @@
 import { sdkProvider } from "./sdkProvider";
-import { Models } from "appwrite/src/models";
 import { MyCollections, Server } from "../config";
 import User from "../../types/user";
 import MyError from "../../types/myError";
@@ -24,8 +23,15 @@ export const createAccount = async (
   return userDoc as User;
 };
 
-export const getAccount = (): Promise<Models.Account<Models.Preferences>> => {
-  return sdkProvider.provider().account.get();
+export const getAccount = async (): Promise<User> => {
+  const account = await sdkProvider.provider().account.get();
+  return (await sdkProvider
+    .provider()
+    .database.getDocument(
+      Server.database,
+      MyCollections.Users,
+      account.$id
+    )) as User;
 };
 
 export const login = async (
