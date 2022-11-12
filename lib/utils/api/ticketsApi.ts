@@ -21,3 +21,15 @@ export const getTicketsPaginated = async (
     data: tickets.documents.map((t) => t as Ticket),
   };
 };
+
+export const getTicket = async (id: string): Promise<Ticket> => {
+  const ticket = (await sdkProvider
+    .provider()
+    .database.getDocument(
+      Server.database,
+      MyCollections.Tickets,
+      id
+    )) as Ticket;
+  ticket.date = new Date(ticket.date);
+  return ticket;
+};

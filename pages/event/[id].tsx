@@ -13,16 +13,12 @@ import { getTicketsPaginated } from "../../lib/utils/api/ticketsApi";
 import ListTile from "../../components/ListTile";
 import { getSportIcon } from "../../lib/types/sport";
 import Image from "next/image";
+import Link from "next/link";
 
 const EventPage = () => {
   useLockedRoute();
   const router = useRouter();
   const { id } = router.query;
-
-  /*
-  User: 636fb073b57d6c8348e7
-  Event: 636fcfe4c7de09d9f3e5
-   */
 
   useEffect(() => {
     if (typeof id !== "string") {
@@ -32,10 +28,8 @@ const EventPage = () => {
   }, [id]);
 
   const getEventWrapper = (): Promise<MyEvent> => {
-    console.log("Event");
     return getEvent(id as string);
   };
-
   const getTicketsWrapper = (page: number): Promise<PaginationApi<Ticket>> => {
     return getTicketsPaginated(id as string, page);
   };
@@ -52,27 +46,29 @@ const EventPage = () => {
           <Pagination
             getData={getTicketsWrapper}
             itemBuilder={(ticket) => (
-              <div className="my-4">
-                <ListTile>
-                  <div className="flex flex-row justify-between my-4">
-                    <p className="text-xl text-primary">{ticket.location}</p>
-                    <div className="flex flex-row justify-end">
-                      <p className="mr-8 text-xl text-primary">
-                        ${ticket.price}
-                      </p>
-                      {event ? (
-                        <Image
-                          height={35}
-                          src={getSportIcon(event.sport)}
-                          alt={event.sport.name}
-                        />
-                      ) : (
-                        <></>
-                      )}
+              <Link key={ticket.$id} href={`/ticket/${ticket.$id}`}>
+                <div className="my-4">
+                  <ListTile>
+                    <div className="flex flex-row justify-between my-4">
+                      <p className="text-xl text-primary">{ticket.location}</p>
+                      <div className="flex flex-row justify-end">
+                        <p className="mr-8 text-xl text-primary">
+                          ${ticket.price}
+                        </p>
+                        {event ? (
+                          <Image
+                            height={35}
+                            src={getSportIcon(event.sport)}
+                            alt={event.sport.name}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </ListTile>
-              </div>
+                  </ListTile>
+                </div>
+              </Link>
             )}
           />
         </div>

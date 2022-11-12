@@ -5,6 +5,8 @@ type Ticket = Models.Document & {
   sellerId: string;
   price: number;
   eventId: string;
+  eventName: string;
+  date: Date;
 };
 
 export default Ticket;
