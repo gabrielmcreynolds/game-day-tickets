@@ -7,3 +7,9 @@ body {
   padding: 0;
   margin: 0;
 }
+
+@layer base {
+  html {
+    font-family: 'Noto Sans', sans-serif;
+  }
+}

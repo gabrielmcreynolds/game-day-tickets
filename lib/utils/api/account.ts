@@ -23,15 +23,23 @@ export const createAccount = async (
   return userDoc as User;
 };
 
-export const getAccount = async (): Promise<User> => {
-  const account = await sdkProvider.provider().account.get();
-  return (await sdkProvider
-    .provider()
-    .database.getDocument(
-      Server.database,
-      MyCollections.Users,
-      account.$id
-    )) as User;
+export const getAccount = async (): Promise<User | MyError> => {
+  try {
+    const account = await sdkProvider.provider().account.get();
+    return (await sdkProvider
+      .provider()
+      .database.getDocument(
+        Server.database,
+        MyCollections.Users,
+        account.$id
+      )) as User;
+  } catch (e) {
+    console.log(e);
+    return {
+      message: "no user defined",
+      code: 1,
+    };
+  }
 };
 
 export const login = async (

@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import User from "../types/user";
 import { getAccount } from "../utils/api/account";
+import { isError } from "../types/myError";
 
 const UserContext = createContext<{
   user: User | undefined;
@@ -19,7 +20,9 @@ export const UserProvider = ({ children }: any) => {
   useEffect(() => {
     const fetchAccount = async (): Promise<void> => {
       const u = await getAccount();
-      setUser(u);
+      if (!isError(u)) {
+        setUser(u);
+      }
       setLoading(false);
     };
     fetchAccount();
