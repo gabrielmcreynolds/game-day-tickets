@@ -17,6 +17,7 @@ const Dashboard = () => {
   const { user } = useUser();
   const { loading, result: sportsData } = useRequest(getSports);
   const [sport, setSport] = useState<Sport | undefined>(undefined);
+
   useLockedRoute();
   return (
     <Layout title="Dashboard">
@@ -56,22 +57,28 @@ const Dashboard = () => {
           <Pagination
             getData={getEventsPaginated}
             itemBuilder={(day) => (
-              <div>
-                <h3 className="text-2xl">{dateFormatter(day.day)}</h3>
-                <span className="h-4 w-64 bg-primary"></span>
-
-                {day.events.map((ev) => (
-                  <ListTile key={ev.$id}>
-                    <div className="flex flex-row justify-between my-4">
-                      <p className="text-xl text-primary">{ev.name}</p>
-                      <Image
-                        height={35}
-                        src={getSportIcon(ev.sport)}
-                        alt={ev.sport.name}
-                      />
+              <div key={day.day.getSeconds()} className="my-6">
+                <h3 className="text-2xl underline decoration-danger underline-offset-3 mb-2">
+                  {dateFormatter(day.day)}
+                </h3>
+                {day.events.map((ev) =>
+                  sport === undefined || ev.sport.$id === sport.$id ? (
+                    <div className="my-2" key={ev.$id}>
+                      <ListTile>
+                        <div className="flex flex-row justify-between my-4">
+                          <p className="text-xl text-primary">{ev.name}</p>
+                          <Image
+                            height={35}
+                            src={getSportIcon(ev.sport)}
+                            alt={ev.sport.name}
+                          />
+                        </div>
+                      </ListTile>
                     </div>
-                  </ListTile>
-                ))}
+                  ) : (
+                    <></>
+                  )
+                )}
               </div>
             )}
           />

@@ -3,7 +3,9 @@ import usePagination, { PaginationApi } from "../lib/hooks/usePagination";
 const Pagination = <T extends unknown>({
   getData,
   itemBuilder,
+  filter,
 }: {
+  filter?: (item: T) => boolean;
   getData: (page: number) => Promise<PaginationApi<T>>;
   itemBuilder: (item: T) => JSX.Element;
 }) => {
@@ -17,7 +19,9 @@ const Pagination = <T extends unknown>({
       {isLoading || !pageData ? (
         <p>Loading</p>
       ) : (
-        pageData.map((item) => itemBuilder(item))
+        pageData.map((item) =>
+          filter && !filter(item) ? <></> : itemBuilder(item)
+        )
       )}
 
       <div className="flex flex-row justify-end mt-2">
