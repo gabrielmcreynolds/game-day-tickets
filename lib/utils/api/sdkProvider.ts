@@ -17,7 +17,6 @@ export const sdkProvider: sdkProviderI = {
     if (sdkProvider.sdk) {
       return sdkProvider.sdk;
     }
-
     const appwrite = new Client();
     appwrite.setEndpoint(Server.endpoint).setProject(Server.project);
     const account = new Account(appwrite);

@@ -50,11 +50,14 @@ export const login = async (
     const user = await sdkProvider
       .provider()
       .account.createEmailSession(email, password);
-
-    const userDoc = await sdkProvider
+    console.log(`Id: ${user.$id}`);
+    return (await sdkProvider
       .provider()
-      .database.getDocument(Server.database, MyCollections.Users, user.$id);
-    return userDoc as User;
+      .database.getDocument(
+        Server.database,
+        MyCollections.Users,
+        user.userId
+      )) as User;
   } catch (e) {
     console.log(e);
     return { message: e!.toString() };

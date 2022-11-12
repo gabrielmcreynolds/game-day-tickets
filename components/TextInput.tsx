@@ -9,14 +9,12 @@ const TextInput = ({ label, ...props }: any) => {
       </label>
       <div>
         <input
-          className="min-w-full text-primary rounded p-2 text-xl bg-gradient-to-r from-blue-100 to-blue-400"
+          className="text-secondary rounded p-2 text-xl border-2 border-secondary"
           {...field}
           {...props}
         />
         {meta.touched && meta.error ? (
-          <div className="text-red-500 border-red-500 border-dashed border py-1 px-2 max-w-min whitespace-nowrap rounded mt-2">
-            {meta.error}
-          </div>
+          <div className="text-danger mt-2 underline">{meta.error}</div>
         ) : null}
       </div>
     </>

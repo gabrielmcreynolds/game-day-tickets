@@ -11,5 +11,6 @@ body {
 @layer base {
   html {
     font-family: 'Noto Sans', sans-serif;
+    color: theme('colors.secondary')
   }
 }
