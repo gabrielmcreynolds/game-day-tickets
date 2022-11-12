@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PAGINATION_SIZE } from "../utils/config";
 
 export type PaginationApi<T> = {
   size: number;
@@ -25,7 +26,7 @@ const usePagination = <T>(
   const fetchData = async (p: number) => {
     setIsLoading(true);
     const data = await getData(p);
-    setMaxPage(Math.ceil(data.size / 25.0));
+    setMaxPage(Math.ceil(data.size / PAGINATION_SIZE));
     setAllPageData([...allPageData, data.data]);
     setPageData(data.data);
     setHighestFetchedPage(highestFetchedPage + 1);

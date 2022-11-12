@@ -3,14 +3,14 @@ import { useUser } from "../context/user.context";
 import { useEffect } from "react";
 
 const useLockedRoute = () => {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !loading) {
       router.replace("/");
     }
-  }, [user]);
+  }, [user, loading]);
 };
 
 export default useLockedRoute;

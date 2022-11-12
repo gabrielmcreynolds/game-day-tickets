@@ -23,7 +23,7 @@ const useRequest = <T>(val: () => Promise<T>): ReqData<T> => {
         .finally(() => setLoading(false));
     };
     get();
-  }, [val]);
+  }, []);
 
   return { result: result, error, loading };
 };

@@ -1,6 +1,6 @@
 import { getSports } from "./sportsApi";
 import { sdkProvider } from "./sdkProvider";
-import { MyCollections, Server } from "../config";
+import { MyCollections, PAGINATION_SIZE, Server } from "../config";
 import { Query } from "appwrite";
 import { Day, MyEvent } from "../../types/event";
 import { PaginationApi } from "../../hooks/usePagination";
@@ -13,8 +13,8 @@ export const getEventsPaginated = async (
     .provider()
     .database.listDocuments(Server.database, MyCollections.Events, [
       Query.orderAsc("date"),
-      Query.limit(25),
-      Query.offset((page - 1) * 25),
+      Query.limit(PAGINATION_SIZE),
+      Query.offset((page - 1) * PAGINATION_SIZE),
     ]);
   const datesAreOnSameDay = (first: Date, second: Date) =>
     first.getFullYear() === second.getFullYear() &&
@@ -39,4 +39,16 @@ export const getEventsPaginated = async (
     }
   });
   return { size: events.total, data: days };
+};
+
+export const getEvent = async (id: string): Promise<MyEvent> => {
+  const event = (await sdkProvider
+    .provider()
+    .database.getDocument(
+      Server.database,
+      MyCollections.Events,
+      id
+    )) as MyEvent;
+  event.date = new Date(event.date);
+  return event;
 };

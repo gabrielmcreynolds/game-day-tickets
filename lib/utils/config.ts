@@ -8,4 +8,7 @@ export enum MyCollections {
   Sports = "636f120814bc273d82db",
   Users = "636f27df6af7980e574e",
   Events = "636fcbf3c1fbf01f919b",
+  Tickets = "63700735756d482fe89b",
 }
+
+export const PAGINATION_SIZE = 25;
