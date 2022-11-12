@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useUser } from "../lib/context/user.context";
 import { sdkProvider } from "../lib/utils/api/sdkProvider";
 import { useRouter } from "next/router";
+import NavBar from "./NavBar";
 
 const Layout = ({
   children,
@@ -20,6 +21,7 @@ const Layout = ({
       <Head>
         <title>{title}</title>
       </Head>
+      <NavBar />
       <header className="px-3 bg-primary h-14 sticky top-0 flex flex-row justify-between">
         <div className="flex flex-row">
           <Link className="my-auto" href="/dashboard">
@@ -41,7 +43,7 @@ const Layout = ({
         ) : null}
       </header>
 
-      <div className="min-h-screen">{children}</div>
+      <div className={`${user ? "ml-64" : ""} min-h-screen`}>{children}</div>
       <footer
         data-testid="footer"
         className="text-center border-t border-primary text-primary py-4 pl-5"

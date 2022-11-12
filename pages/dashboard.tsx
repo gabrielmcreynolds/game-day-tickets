@@ -1,16 +1,15 @@
+"use client";
+
 import Layout from "../components/Layout";
 import { useUser } from "../lib/context/user.context";
-import { useRouter } from "next/router";
+import useLockedRoute from "../lib/hooks/useLockedRoute";
 
 const Dashboard = () => {
   const { user } = useUser();
-  const router = useRouter();
-  if (!user) {
-    router.replace("/");
-  }
+  useLockedRoute();
   return (
     <Layout>
-      <>{user?.name}</>
+      <p>{user?.name}</p>
     </Layout>
   );
 };
