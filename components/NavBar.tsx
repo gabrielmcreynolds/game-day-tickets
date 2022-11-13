@@ -1,6 +1,8 @@
 import { useUser } from "../lib/context/user.context";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
+import Logo from "../public/alt_icon.png";
 
 const NavBar = () => {
   const router = useRouter();
@@ -32,7 +34,14 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="h-full pt-20 fixed left-0 w-64 bg-primary ">
+    <nav className="h-full pt-4 z-20 fixed left-0 w-64 bg-primary ">
+      <div className="ml-4 flex flex-row">
+        <Link className="my-auto" href="/dashboard">
+          <Image height={30} src={Logo} alt="Logo" />
+        </Link>
+        <p className="my-auto mx-4 text-white">GMT</p>
+      </div>
+
       <ul>
         {keys.map((page) => (
           <Link key={page.route} href={page.route}>

@@ -1,6 +1,3 @@
-import Link from "next/link";
-import Image from "next/image";
-import Logo from "../public/alt_icon.png";
 import Head from "next/head";
 import { useUser } from "../lib/context/user.context";
 import { sdkProvider } from "../lib/utils/api/sdkProvider";
@@ -22,16 +19,10 @@ const Layout = ({
         <title>{title}</title>
       </Head>
       <NavBar />
-      <header className="px-3 bg-primary h-14 sticky top-0 flex flex-row justify-between">
-        <div className="flex flex-row">
-          <Link className="my-auto" href="/dashboard">
-            <Image height={30} src={Logo} alt="Logo" />
-          </Link>
-          <p className="my-auto mx-4 text-white">GMT</p>
-        </div>
+      <header className="px-3 border-b bg-white border-primary shadow  h-14 sticky top-0 flex justify-end">
         {user ? (
           <button
-            className="text-white"
+            className="text-danger border rounded border-danger max-w-min my-2 px-3"
             onClick={() => {
               sdkProvider.provider().account.deleteSession("current");
               setUser(undefined);
