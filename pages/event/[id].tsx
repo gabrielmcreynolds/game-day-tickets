@@ -72,7 +72,9 @@ const EventPage = () => {
         <h3 className="text-2xl">
           {loading || !event ? "Loading..." : dateFormatter(event.date)}
         </h3>
-        <Search onChange={(val) => setSearchQuery(val)} />
+        <div className="my-2">
+          <Search onChange={(val) => setSearchQuery(val)} />
+        </div>
 
         <div className="mt-4">
           {searchQuery === "" ? (
