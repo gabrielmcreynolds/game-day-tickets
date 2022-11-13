@@ -4,6 +4,8 @@ import { MyCollections, Server } from "../config";
 import { Query } from "appwrite";
 import Ticket from "../../types/ticket";
 import { getTicket, getUsersTickets } from "./ticketsApi";
+import { getUser } from "./account";
+import { isError } from "../../types/myError";
 
 export const getBids = async (ticketId: string): Promise<Bid[]> => {
   const result = await sdkProvider
@@ -58,6 +60,18 @@ export const acceptBid = async (bid: Bid): Promise<Bid> => {
         sold: true,
       }
     );
+  const user = await getUser(bid.userId);
+  await fetch("/api/sendsms", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      to: user.phone,
+      message: `Your bid for ${bid.eventName} has been accepted!`,
+    }),
+  });
   return await sdkProvider
     .provider()
     .database.updateDocument(Server.database, MyCollections.Bids, bid.$id, {
@@ -92,6 +106,10 @@ export const placeBid = async (
   userName: string,
   ticket: Ticket
 ): Promise<Bid> => {
+  const user = await getUser(ticket.sellerId);
+  if (isError(user)) {
+    throw new Error("Uh oh");
+  }
   const result = await sdkProvider
     .provider()
     .database.createDocument(Server.database, MyCollections.Bids, "unique()", {
@@ -113,5 +131,17 @@ export const placeBid = async (
         price,
       }
     );
+
+  await fetch("/api/sendsms", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      to: user.phone,
+      message: `A new bid for ${price} has been placed for your ticket`,
+    }),
+  });
   return result as Bid;
 };

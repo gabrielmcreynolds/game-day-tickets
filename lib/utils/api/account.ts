@@ -25,16 +25,16 @@ export const createAccount = async (
   return userDoc as User;
 };
 
+export const getUser = async (id: string): Promise<User> => {
+  return (await sdkProvider
+    .provider()
+    .database.getDocument(Server.database, MyCollections.Users, id)) as User;
+};
+
 export const getAccount = async (): Promise<User | MyError> => {
   try {
     const account = await sdkProvider.provider().account.get();
-    return (await sdkProvider
-      .provider()
-      .database.getDocument(
-        Server.database,
-        MyCollections.Users,
-        account.$id
-      )) as User;
+    return getUser(account.$id);
   } catch (e) {
     console.log(e);
     return {
