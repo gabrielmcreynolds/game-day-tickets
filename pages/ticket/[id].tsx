@@ -1,10 +1,13 @@
 import Layout from "../../components/Layout";
 import { router } from "next/client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Ticket from "../../lib/types/ticket";
 import { getTicket } from "../../lib/utils/api/ticketsApi";
 import useRequest from "../../lib/hooks/useRequest";
 import { dateFormatter } from "../../lib/utils/dateFormater";
+import { getBids, placeBid } from "../../lib/utils/api/bidsApi";
+import Bid from "../../lib/types/bid";
+import { useUser } from "../../lib/context/user.context";
 
 const TicketPage = () => {
   const { id: ticketId } = router.query;
@@ -23,11 +26,31 @@ const TicketPage = () => {
     return undefined;
   };
 
-  const { loading, result: ticket } = useRequest<Ticket>(getTicketWrapper);
+  const getBidsWrapper = (): Promise<Bid[]> | undefined => {
+    if (router.isReady) {
+      return getBids(ticketId as string);
+    }
+    return undefined;
+  };
+
+  const { user } = useUser();
+  const [hasSubmittedKey, setHasSubmittedKey] = useState(0);
+  let { result: bids } = useRequest(getBidsWrapper, hasSubmittedKey);
+  const { loading, result: ticket } = useRequest<Ticket>(
+    getTicketWrapper,
+    hasSubmittedKey
+  );
+  const [bid, setBid] = useState(0);
+  const handleSubmitBid = async (e: any) => {
+    e.preventDefault();
+    await placeBid(bid, user!.$id, user!.name, ticket!);
+    setHasSubmittedKey(hasSubmittedKey + 1);
+    setBid(0);
+  };
 
   return (
     <Layout title="Ticket">
-      <main className="mt-20 max-w-2xl mx-auto">
+      <main className="mx-6 mt-20 max-w-2xl xl:mx-auto">
         {ticket ? (
           <>
             <h1 className="text-4xl mb-4">{ticket.location}</h1>
@@ -43,10 +66,16 @@ const TicketPage = () => {
                 <input
                   type="number"
                   name="bid"
+                  value={bid}
+                  onChange={(val) => setBid(+val.target.value)}
                   placeholder={`${ticket.price + 5}`}
                   className="text-secondary max-w-min rounded p-2 text-xl border-2 border-secondary"
                 />
-                <button className="text-white bg-primary rounded px-4">
+                <button
+                  disabled={bid < ticket.price}
+                  onClick={handleSubmitBid}
+                  className="text-white bg-primary rounded px-4"
+                >
                   Place Bid
                 </button>
               </div>
@@ -56,6 +85,16 @@ const TicketPage = () => {
               <h2 className="text-2xl underline decoration-danger mt-12">
                 Previous Bids
               </h2>
+              {bids &&
+                bids.map((bid) => (
+                  <div
+                    key={bid.$id}
+                    className="flex my-4 flex-row justify-between"
+                  >
+                    <p className="text-xl">{bid.userName}</p>
+                    <p className="text-xl">${bid.price}</p>
+                  </div>
+                ))}
             </section>
           </>
         ) : (

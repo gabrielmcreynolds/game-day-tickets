@@ -22,7 +22,7 @@ const Dashboard = () => {
   useLockedRoute();
   return (
     <Layout title="Dashboard">
-      <main className="mt-20 max-w-2xl mx-auto">
+      <main className="mt-20 max-w-2xl xl:mx-auto">
         <div className="flex flex-row justify-between">
           <h1 className="text-4xl my-auto">Events</h1>
           <select

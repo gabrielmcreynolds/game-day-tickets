@@ -6,7 +6,10 @@ export type ReqData<T> = {
   loading: boolean;
 };
 
-const useRequest = <T>(val: () => Promise<T> | undefined): ReqData<T> => {
+const useRequest = <T>(
+  val: () => Promise<T> | undefined,
+  refreshKey?: number
+): ReqData<T> => {
   const [result, setResult] = useState<T | undefined>(undefined);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -27,7 +30,7 @@ const useRequest = <T>(val: () => Promise<T> | undefined): ReqData<T> => {
       }
     };
     get();
-  }, [val]);
+  }, [refreshKey]);
 
   return { result: result, error, loading };
 };

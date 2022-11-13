@@ -15,6 +15,14 @@ import { getSportIcon } from "../../lib/types/sport";
 import Image from "next/image";
 import Link from "next/link";
 
+/*
+User:637023e0dbdcd5f31c3c
+Event: 636fcfe4c7de09d9f3e5
+event name: Men's Basketball vs UMKC
+seat: 637013768837e06effb1
+location: Section 2 Seat 3
+ */
+
 const EventPage = () => {
   useLockedRoute();
   const router = useRouter();
@@ -37,7 +45,7 @@ const EventPage = () => {
 
   return (
     <Layout title="Event">
-      <main className="mt-20 max-w-2xl mx-auto">
+      <main className="mx-4 mt-20 max-w-2xl xl:mx-auto">
         <h1 className="text-4xl">{loading ? "Loading..." : event?.name}</h1>
         <h3 className="text-2xl">
           {loading || !event ? "Loading..." : dateFormatter(event.date)}
