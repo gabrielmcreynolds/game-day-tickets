@@ -8,7 +8,8 @@ export type ReqData<T> = {
 
 const useRequest = <T>(
   val: () => Promise<T> | undefined,
-  refreshKey?: number
+  refreshKey?: any,
+  refreshKey2?: any
 ): ReqData<T> => {
   const [result, setResult] = useState<T | undefined>(undefined);
   const [error, setError] = useState<Error | undefined>(undefined);
@@ -30,7 +31,7 @@ const useRequest = <T>(
       }
     };
     get();
-  }, [refreshKey]);
+  }, [refreshKey, refreshKey2]);
 
   return { result: result, error, loading };
 };
