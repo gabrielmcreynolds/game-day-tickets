@@ -22,7 +22,7 @@ const Dashboard = () => {
   useLockedRoute();
   return (
     <Layout title="Dashboard">
-      <main className="mt-20 max-w-2xl xl:mx-auto">
+      <main className="mx-4 mt-20 max-w-2xl xl:mx-auto">
         <div className="flex flex-row justify-between">
           <h1 className="text-4xl my-auto">Events</h1>
           <select
@@ -39,14 +39,16 @@ const Dashboard = () => {
             name="sport"
             id="sport"
           >
-            <option className="text-xl" value="all">
+            <option key="0" className="text-xl" value="all">
               Sport
             </option>
             {loading ? (
-              <option value="-1">Loading...</option>
+              <option key="550" value="-1">
+                Loading...
+              </option>
             ) : (
               sportsData!.sports.map((s) => (
-                <option className="text-xl" value={s.name}>
+                <option key={s.$id} className="text-xl" value={s.name}>
                   {s.name}
                 </option>
               ))
@@ -64,8 +66,8 @@ const Dashboard = () => {
                 </h3>
                 {day.events.map((ev) =>
                   sport === undefined || ev.sport.$id === sport.$id ? (
-                    <Link href={`/event/${ev.$id}`}>
-                      <div className="my-2" key={ev.$id}>
+                    <Link key={ev.$id} href={`/event/${ev.$id}`}>
+                      <div className="my-2">
                         <ListTile>
                           <div className="flex flex-row justify-between my-4">
                             <p className="text-xl text-primary">{ev.name}</p>

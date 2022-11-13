@@ -6,6 +6,7 @@ import MyError from "../../types/myError";
 export const createAccount = async (
   email: string,
   password: string,
+  phone: string,
   name: string
 ): Promise<User> => {
   // create the user in accounts
@@ -19,6 +20,7 @@ export const createAccount = async (
     .database.createDocument(Server.database, MyCollections.Users, user.$id, {
       name,
       email,
+      phone,
     });
   return userDoc as User;
 };
