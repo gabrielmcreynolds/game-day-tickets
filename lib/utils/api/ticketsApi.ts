@@ -13,6 +13,7 @@ export const getTicketsPaginated = async (
     .provider()
     .database.listDocuments(Server.database, MyCollections.Tickets, [
       Query.equal("eventId", eventId),
+      Query.equal("sold", false),
       Query.offset((page - 1) * PAGINATION_SIZE),
       Query.limit(PAGINATION_SIZE),
     ]);
@@ -35,6 +36,16 @@ export const getTicket = async (id: string): Promise<Ticket> => {
   return ticket;
 };
 
+export const getUsersTickets = async (userId: string): Promise<Ticket[]> => {
+  return (
+    await sdkProvider
+      .provider()
+      .database.listDocuments(Server.database, MyCollections.Tickets, [
+        Query.equal("sellerId", userId),
+      ])
+  ).documents.map((doc) => doc as Ticket);
+};
+
 export const createTicket = async (
   event: MyEvent,
   price: number,
@@ -54,6 +65,7 @@ export const createTicket = async (
       {
         location,
         price,
+        sold: false,
         eventId: event.$id,
         sellerId: userId,
         eventName: event.name,

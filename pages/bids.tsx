@@ -14,8 +14,6 @@ const Bids = () => {
   useLockedRoute();
   const { user } = useUser();
   const bidsWrapper = (): Promise<Bid[]> | undefined => {
-    console.log(`Running bid finder
-    `);
     if (user) {
       return getUserBids(user!.$id);
     }

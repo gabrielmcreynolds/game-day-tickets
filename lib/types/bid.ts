@@ -4,6 +4,7 @@ type Bid = Models.Document & {
   price: number;
   userId: string;
   ticketId: string;
+  accepted: boolean;
   eventName: string;
   ticketLocation: string;
   userName: string;

@@ -7,6 +7,7 @@ type Ticket = Models.Document & {
   eventId: string;
   eventName: string;
   date: Date;
+  sold: boolean;
 };
 
 export default Ticket;
