@@ -5,7 +5,7 @@ import useRequest from "../../lib/hooks/useRequest";
 import { getEvent } from "../../lib/utils/api/eventsApi";
 import { MyEvent } from "../../lib/types/event";
 import { dateFormatter } from "../../lib/utils/dateFormater";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination";
 import Ticket from "../../lib/types/ticket";
 import { PaginationApi } from "../../lib/hooks/usePagination";
@@ -14,17 +14,12 @@ import ListTile from "../../components/ListTile";
 import { getSportIcon } from "../../lib/types/sport";
 import Image from "next/image";
 import Link from "next/link";
-
-/*
-User:637023e0dbdcd5f31c3c
-Event: 636fcfe4c7de09d9f3e5
-event name: Men's Basketball vs UMKC
-seat: 637013768837e06effb1
-location: Section 2 Seat 3
- */
+import useSearchTickets from "../../lib/hooks/useSearchTickets";
+import Search from "../../components/Search";
 
 const EventPage = () => {
   useLockedRoute();
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const router = useRouter();
   const { id } = router.query;
 
@@ -35,6 +30,9 @@ const EventPage = () => {
     }
   }, [id]);
 
+  const { tickets: searchedTickets, isLoading: isTicketsLoading } =
+    useSearchTickets(searchQuery, id as string);
+
   const getEventWrapper = (): Promise<MyEvent> => {
     return getEvent(id as string);
   };
@@ -42,7 +40,31 @@ const EventPage = () => {
     return getTicketsPaginated(id as string, page);
   };
   const { result: event, loading } = useRequest(getEventWrapper);
-
+  const itemBuilder = (ticket: Ticket) => {
+    return (
+      <Link key={ticket.$id} href={`/ticket/${ticket.$id}`}>
+        <div className="my-4">
+          <ListTile>
+            <div className="flex flex-row justify-between my-4">
+              <p className="text-xl text-primary">{ticket.location}</p>
+              <div className="flex flex-row justify-end">
+                <p className="mr-8 text-xl text-primary">${ticket.price}</p>
+                {event ? (
+                  <Image
+                    height={35}
+                    src={getSportIcon(event.sport)}
+                    alt={event.sport.name ?? "Sport"}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+          </ListTile>
+        </div>
+      </Link>
+    );
+  };
   return (
     <Layout title="Event">
       <main className="mx-4 mt-20 max-w-2xl xl:mx-auto">
@@ -50,35 +72,20 @@ const EventPage = () => {
         <h3 className="text-2xl">
           {loading || !event ? "Loading..." : dateFormatter(event.date)}
         </h3>
+        <Search onChange={(val) => setSearchQuery(val)} />
+
         <div className="mt-4">
-          <Pagination
-            getData={getTicketsWrapper}
-            itemBuilder={(ticket) => (
-              <Link key={ticket.$id} href={`/ticket/${ticket.$id}`}>
-                <div className="my-4">
-                  <ListTile>
-                    <div className="flex flex-row justify-between my-4">
-                      <p className="text-xl text-primary">{ticket.location}</p>
-                      <div className="flex flex-row justify-end">
-                        <p className="mr-8 text-xl text-primary">
-                          ${ticket.price}
-                        </p>
-                        {event ? (
-                          <Image
-                            height={35}
-                            src={getSportIcon(event.sport)}
-                            alt={event.sport.name}
-                          />
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                    </div>
-                  </ListTile>
-                </div>
-              </Link>
-            )}
-          />
+          {searchQuery === "" ? (
+            <Pagination getData={getTicketsWrapper} itemBuilder={itemBuilder} />
+          ) : (
+            <div>
+              {isTicketsLoading ? (
+                <p>Loading</p>
+              ) : (
+                searchedTickets?.map(itemBuilder)
+              )}
+            </div>
+          )}
         </div>
       </main>
     </Layout>

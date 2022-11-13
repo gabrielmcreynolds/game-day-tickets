@@ -35,6 +35,23 @@ export const getTicket = async (id: string): Promise<Ticket> => {
   ticket.date = new Date(ticket.date);
   return ticket;
 };
+
+export const searchTickets = async (
+  eventId: string,
+  query: string
+): Promise<Ticket[]> => {
+  const docs = await sdkProvider
+    .provider()
+    .database.listDocuments(Server.database, MyCollections.Tickets, [
+      Query.equal("eventId", eventId),
+      Query.equal("sold", false),
+    ]);
+  const searchedDocs = docs.documents.filter((doc) =>
+    (doc.location as string).toLowerCase().includes(query.toLowerCase())
+  );
+  return searchedDocs.map((d) => d as Ticket);
+};
+
 export const downloadTicket = async (ticketId: string) => {
   console.log("Downloading...");
   const ticket = await getTicket(ticketId);
