@@ -8,6 +8,7 @@ import { isError } from "../lib/types/myError";
 import TextInput from "../components/TextInput";
 import Image from "next/image";
 import Button from "../components/Button";
+import Link from "next/link";
 
 export default function Home() {
   const { user, setUser } = useUser();
@@ -83,6 +84,10 @@ export default function Home() {
                   <Button type="submit" disabled={isSubmitting}>
                     Login
                   </Button>
+                </div>
+
+                <div className="mt-3">
+                  <Link href="/create-account">Create Account</Link>
                 </div>
               </Form>
             </main>
