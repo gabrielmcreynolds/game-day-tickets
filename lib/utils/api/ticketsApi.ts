@@ -35,6 +35,15 @@ export const getTicket = async (id: string): Promise<Ticket> => {
   ticket.date = new Date(ticket.date);
   return ticket;
 };
+export const downloadTicket = async (ticketId: string) => {
+  console.log("Downloading...");
+  const ticket = await getTicket(ticketId);
+  console.log(ticket);
+  const result = await sdkProvider
+    .provider()
+    .storage.getFileDownload(MyBuckets.Tickets, ticket.fileId);
+  window.open(result.href);
+};
 
 export const getUsersTickets = async (userId: string): Promise<Ticket[]> => {
   return (

@@ -9,6 +9,7 @@ import Image from "next/image";
 import Trash from "../public/trash.svg";
 import Link from "next/link";
 import { useState } from "react";
+import { downloadTicket } from "../lib/utils/api/ticketsApi";
 
 const Bids = () => {
   useLockedRoute();
@@ -38,22 +39,32 @@ const Bids = () => {
             <h3 className="text-2xl underline decoration-danger">
               {bid.eventName}
             </h3>
-            <Link href={`/ticket/${bid.ticketId}`}>
-              <ListTile>
-                <div className="flex flex-row justify-between">
+
+            <ListTile>
+              <div className="flex flex-row justify-between">
+                <Link href={`/ticket/${bid.ticketId}`}>
                   <p className="text-xl my-auto">{bid.ticketLocation}</p>
-                  <div className="text-xl flex py-2">
-                    <p className="my-auto mx-4">${bid.price}</p>
+                </Link>
+                <div className="text-xl flex py-2">
+                  <p className="my-auto mx-4">${bid.price}</p>
+                  {bid.accepted ? (
+                    <p
+                      onClick={() => downloadTicket(bid.ticketId)}
+                      className="my-auto cursor-pointer mx-4"
+                    >
+                      Accepted. Click to download
+                    </p>
+                  ) : (
                     <Image
                       onClick={() => handleDeleteBid(bid)}
                       src={Trash}
                       alt="delete"
                       height={25}
                     />
-                  </div>
+                  )}
                 </div>
-              </ListTile>
-            </Link>
+              </div>
+            </ListTile>
           </div>
         ))}
       </main>
