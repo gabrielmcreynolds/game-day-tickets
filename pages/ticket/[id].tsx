@@ -7,6 +7,8 @@ import useRequest from "../../lib/hooks/useRequest";
 import { dateFormatter } from "../../lib/utils/dateFormater";
 import { getBids, placeBid } from "../../lib/utils/api/bidsApi";
 import Bid from "../../lib/types/bid";
+import Image from "next/image";
+import NotFound from "../../public/not-found.svg";
 import { useUser } from "../../lib/context/user.context";
 
 const TicketPage = () => {
@@ -86,14 +88,26 @@ const TicketPage = () => {
                 Previous Bids
               </h2>
               {bids &&
-                bids.map((bid) => (
-                  <div
-                    key={bid.$id}
-                    className="flex my-4 flex-row justify-between"
-                  >
-                    <p className="text-xl">{bid.userName}</p>
-                    <p className="text-xl">${bid.price}</p>
+                (bids.length === 0 ? (
+                  <div className="-mt-8">
+                    <Image
+                      className="mx-auto"
+                      src={NotFound}
+                      height={300}
+                      alt="Nothing here"
+                    />
+                    <p className="mx-auto text-center mt-2">No Bids Yet</p>
                   </div>
+                ) : (
+                  bids.map((bid) => (
+                    <div
+                      key={bid.$id}
+                      className="flex my-4 flex-row justify-between"
+                    >
+                      <p className="text-xl">{bid.userName}</p>
+                      <p className="text-xl">${bid.price}</p>
+                    </div>
+                  ))
                 ))}
             </section>
           </>
