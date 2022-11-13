@@ -11,9 +11,14 @@ import { MyEvent } from "../lib/types/event";
 import { Form, Formik } from "formik";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
+import { createTicket } from "../lib/utils/api/ticketsApi";
+import { useUser } from "../lib/context/user.context";
+import { useRouter } from "next/router";
 
 const Sell = () => {
   const [page, setPage] = useState(0);
+  const { user } = useUser();
+  const router = useRouter();
   const [event, setEvent] = useState<MyEvent | undefined>(undefined);
   const [file, setFile] = useState<undefined | File | null>(undefined);
   useLockedRoute();
@@ -115,6 +120,16 @@ const Sell = () => {
                   return;
                 }
                 setSubmitting(true);
+                const ticket = await createTicket(
+                  event!,
+                  price,
+                  location,
+                  user!.$id,
+                  file
+                );
+                setSubmitting(false);
+                router.push("/dashboard");
+                alert("Successfully posted ticket!");
               }}
             >
               {({ isSubmitting }) => (
