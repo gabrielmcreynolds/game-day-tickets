@@ -22,73 +22,82 @@ const Dashboard = () => {
   useLockedRoute();
   return (
     <Layout title="Dashboard">
-      <main className="mx-4 mt-20 max-w-2xl xl:mx-auto">
-        <div className="flex flex-row justify-between">
-          <h1 className="text-4xl my-auto">Events</h1>
-          <select
-            onChange={(val) =>
-              setSport(
-                val.target.value === "all"
-                  ? undefined
-                  : sportsData!.sports.filter(
-                      (s) => s.name === val.target.value
-                    )[0]
-              )
-            }
-            className="my-auto"
-            name="sport"
-            id="sport"
-          >
-            <option key="0" className="text-xl" value="all">
-              Sport
-            </option>
-            {loading ? (
-              <option key="550" value="-1">
-                Loading...
+      <div>
+        <div className="max-w-3xl mx-4 2xl:mx-auto ">
+          <h1 className="text-5xl mt-10 absolute">
+            Welcome, <br />
+            {user?.name}
+          </h1>
+          <span className="h-2 w-48 relative -z-10 top-[68px] left-[60px] inline-block bg-danger"></span>
+        </div>
+        <main className="mx-4 mt-40 max-w-2xl xl:mx-auto">
+          <div className="flex flex-row justify-between">
+            <h1 className="text-4xl my-auto">Events</h1>
+            <select
+              onChange={(val) =>
+                setSport(
+                  val.target.value === "all"
+                    ? undefined
+                    : sportsData!.sports.filter(
+                        (s) => s.name === val.target.value
+                      )[0]
+                )
+              }
+              className="my-auto"
+              name="sport"
+              id="sport"
+            >
+              <option key="0" className="text-xl" value="all">
+                Sport
               </option>
-            ) : (
-              sportsData!.sports.map((s) => (
-                <option key={s.$id} className="text-xl" value={s.name}>
-                  {s.name}
+              {loading ? (
+                <option key="550" value="-1">
+                  Loading...
                 </option>
-              ))
-            )}
-          </select>
-        </div>
+              ) : (
+                sportsData!.sports.map((s) => (
+                  <option key={s.$id} className="text-xl" value={s.name}>
+                    {s.name}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
 
-        <div className="mt-4">
-          <Pagination
-            getData={getEventsPaginated}
-            itemBuilder={(day) => (
-              <div key={day.day.getSeconds()} className="my-6">
-                <h3 className="text-2xl underline decoration-danger underline-offset-3 mb-2">
-                  {dateFormatter(day.day)}
-                </h3>
-                {day.events.map((ev) =>
-                  sport === undefined || ev.sport.$id === sport.$id ? (
-                    <Link key={ev.$id} href={`/event/${ev.$id}`}>
-                      <div className="my-2">
-                        <ListTile>
-                          <div className="flex flex-row justify-between my-4">
-                            <p className="text-xl text-primary">{ev.name}</p>
-                            <Image
-                              height={35}
-                              src={getSportIcon(ev.sport)}
-                              alt={ev.sport.name}
-                            />
-                          </div>
-                        </ListTile>
-                      </div>
-                    </Link>
-                  ) : (
-                    <></>
-                  )
-                )}
-              </div>
-            )}
-          />
-        </div>
-      </main>
+          <div className="mt-4">
+            <Pagination
+              getData={getEventsPaginated}
+              itemBuilder={(day) => (
+                <div key={day.day.getSeconds()} className="my-6">
+                  <h3 className="text-2xl underline decoration-danger underline-offset-3 mb-2">
+                    {dateFormatter(day.day)}
+                  </h3>
+                  {day.events.map((ev) =>
+                    sport === undefined || ev.sport.$id === sport.$id ? (
+                      <Link key={ev.$id} href={`/event/${ev.$id}`}>
+                        <div className="my-2">
+                          <ListTile>
+                            <div className="flex flex-row justify-between my-4">
+                              <p className="text-xl text-primary">{ev.name}</p>
+                              <Image
+                                height={35}
+                                src={getSportIcon(ev.sport)}
+                                alt={ev.sport.name}
+                              />
+                            </div>
+                          </ListTile>
+                        </div>
+                      </Link>
+                    ) : (
+                      <></>
+                    )
+                  )}
+                </div>
+              )}
+            />
+          </div>
+        </main>
+      </div>
     </Layout>
   );
 };
