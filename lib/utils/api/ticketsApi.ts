@@ -1,8 +1,9 @@
 import { PaginationApi } from "../../hooks/usePagination";
 import Ticket from "../../types/ticket";
 import { sdkProvider } from "./sdkProvider";
-import { MyCollections, PAGINATION_SIZE, Server } from "../config";
+import { MyBuckets, MyCollections, PAGINATION_SIZE, Server } from "../config";
 import { Query } from "appwrite";
+import { MyEvent } from "../../types/event";
 
 export const getTicketsPaginated = async (
   eventId: string,
@@ -32,4 +33,33 @@ export const getTicket = async (id: string): Promise<Ticket> => {
     )) as Ticket;
   ticket.date = new Date(ticket.date);
   return ticket;
+};
+
+export const createTicket = async (
+  event: MyEvent,
+  price: number,
+  location: string,
+  userId: string,
+  file: File
+): Promise<Ticket> => {
+  const fileUpload = await sdkProvider
+    .provider()
+    .storage.createFile(MyBuckets.Tickets, "unique()", file);
+  const ticket = await sdkProvider
+    .provider()
+    .database.createDocument(
+      Server.database,
+      MyCollections.Tickets,
+      "unique()",
+      {
+        location,
+        price,
+        eventId: event.$id,
+        sellerId: userId,
+        eventName: event.name,
+        date: event.date,
+        fileId: fileUpload.$id,
+      }
+    );
+  return ticket as Ticket;
 };

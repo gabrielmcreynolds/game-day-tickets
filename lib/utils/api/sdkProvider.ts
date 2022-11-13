@@ -1,4 +1,4 @@
-import { Account, Client, Databases } from "appwrite";
+import { Account, Client, Databases, Storage } from "appwrite";
 import { Server } from "../config";
 
 /**
@@ -6,8 +6,8 @@ import { Server } from "../config";
  */
 
 interface sdkProviderI {
-  sdk: undefined | { database: Databases; account: Account };
-  provider: () => { database: Databases; account: Account };
+  sdk: undefined | { database: Databases; account: Account; storage: Storage };
+  provider: () => { database: Databases; account: Account; storage: Storage };
 }
 
 export const sdkProvider: sdkProviderI = {
@@ -21,8 +21,9 @@ export const sdkProvider: sdkProviderI = {
     appwrite.setEndpoint(Server.endpoint).setProject(Server.project);
     const account = new Account(appwrite);
     const database = new Databases(appwrite);
+    const storage = new Storage(appwrite);
 
-    sdkProvider.sdk = { database, account };
+    sdkProvider.sdk = { database, account, storage };
     return sdkProvider.sdk;
   },
 };

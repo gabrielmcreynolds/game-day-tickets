@@ -46,7 +46,6 @@ export default function Home() {
             { setSubmitting, setErrors }
           ) => {
             setSubmitting(true);
-            console.log(`Email: ${email}, Password: ${password}`);
             const user = await login(email, password);
             setSubmitting(false);
             if (isError(user)) {

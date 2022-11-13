@@ -12,4 +12,8 @@ export enum MyCollections {
   Bids = "6370233e402b1247a02a",
 }
 
+export enum MyBuckets {
+  Tickets = "6370399871597b06cd29",
+}
+
 export const PAGINATION_SIZE = 25;
